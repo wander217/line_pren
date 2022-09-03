@@ -49,6 +49,7 @@ class PRENTrainer:
         self.logger: PRENLogger = PRENLogger(**logger)
         self.checkpoint: PRENCheckpoint = PRENCheckpoint(**checkpoint)
         self.step: int = 0
+        self.best: float = 0
 
     def train(self):
         self.load()
@@ -88,24 +89,27 @@ class PRENTrainer:
                 target_text = target[0].detach().cpu().numpy()
                 target_text = self.alphabet.decode(target_text)
                 self.logger.report_time("Epoch {} - step {}".format(epoch, self.step))
-                valid_loss = self.valid_step()
+                valid_rs = self.valid_step()
                 # test_result = self.test_step()
                 self.logger.report_metric({
                     "train_loss": train_loss.calc(),
+                    **valid_rs,
                     "pred_text": pred_text,
                     "target_text": target_text,
-                    "valid_loss": valid_loss.calc(),
                     # **test_result
                 })
                 self.logger.report_delimiter()
                 train_loss.clear()
-                if self.step > 0:
+                if valid_rs['valid_acc'] > self.best:
+                    self.best = valid_rs['valid_acc']
                     self.save()
             self.step += 1
 
     def valid_step(self):
         self.model.eval()
         valid_loss: Averager = Averager()
+        valid_acc: Averager = Averager()
+        valid_norm: Averager = Averager()
         with torch.no_grad():
             for _, (image, target) in enumerate(self.valid_loader):
                 bs = image.size(0)
@@ -114,7 +118,14 @@ class PRENTrainer:
                 pred: Tensor = self.model(image)
                 loss: Tensor = self.criterion(pred, target)
                 valid_loss.update(loss.item() * bs, bs)
-        return valid_loss
+                acc, norm = self._acc(pred, target)
+                valid_acc.update(acc, bs)
+                valid_norm.update(norm, bs)
+        return {
+            "valid_loss": valid_loss.calc(),
+            "valid_acc": valid_acc.calc(),
+            "valid_norm": valid_norm.calc()
+        }
 
     # def test_step(self):
     #     self.model.eval()
