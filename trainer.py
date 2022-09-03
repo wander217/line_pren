@@ -164,7 +164,7 @@ if __name__ == "__main__":
         config['alphabet']['path'] = args.alphabet.strip()
     if args.data.strip():
         for item in ["train", "valid"]:
-            config[item]['dataset']['path'] = os.path.join(args.data.strip(), item, item)
+            config[item]['dataset']['path'] = os.path.join(args.data.strip(), item)
     if args.resume.strip():
         config['checkpoint']['resume'] = args.resume.strip()
     trainer = PRENTrainer(**config, save_interval=args.save_interval)
