@@ -31,15 +31,6 @@ valid:
   dataset:
     path: '../input/long-text'
 
-test:
-  batch_size: 32
-  num_workers: 8
-  drop_last: True
-  shuffle: False
-  pin_memory: False
-  dataset:
-    path: '../input/long-text'
-
 optimizer:
   name: 'Adam'
   params:

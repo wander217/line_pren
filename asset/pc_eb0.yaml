@@ -3,7 +3,7 @@ start_epoch: 1
 
 alphabet:
   path: 'data/rec/config/alphabet.txt'
-  max_len: 125
+  max_len: 100
 
 model:
   encoder:
