@@ -129,7 +129,7 @@ class PRENTrainer:
         return {
             "valid_loss": valid_loss.calc(),
             "valid_acc": valid_acc.calc(),
-            "valid_norm": valid_norm.calc()
+            "valid_norm": 1 - valid_norm.calc()
         }
 
     def _acc(self, pred: Tensor, target: Tensor) -> Tuple:
@@ -147,7 +147,7 @@ class PRENTrainer:
             norm_edit += Levenshtein.distance(p_str, t_str) / max_len
             if p_str == t_str:
                 n_correct += 1
-        return n_correct, 1 - norm_edit
+        return n_correct, norm_edit
 
     def load(self):
         state_dict: Dict = self.checkpoint.load()
