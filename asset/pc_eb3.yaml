@@ -39,7 +39,7 @@ optimizer:
     eps: !!float 1e-09
 
 criterion:
-  gamma: 2
+  gamma: 3
 
 checkpoint:
   workspace: './'

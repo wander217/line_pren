@@ -91,9 +91,7 @@ class PRENTrainer:
                     valid_rs = self.valid_step()
                     self.logger.report_metric({
                         "train_loss": train_loss.calc(),
-                        **valid_rs,
-                        "pred_text": pred_text,
-                        "target_text": target_text
+                        **valid_rs
                     })
                     if valid_rs['valid_acc'] > self.best:
                         self.best = valid_rs['valid_acc']
