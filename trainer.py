@@ -87,18 +87,27 @@ class PRENTrainer:
                 target_text = target[0].detach().cpu().numpy()
                 target_text = self.alphabet.decode(target_text)
                 self.logger.report_time("Epoch {} - step {}".format(epoch, self.step))
-                valid_rs = self.valid_step()
-                self.logger.report_metric({
-                    "train_loss": train_loss.calc(),
-                    **valid_rs,
-                    "pred_text": pred_text,
-                    "target_text": target_text
-                })
+                if self.step % (self.save_interval * 10) == 0:
+                    valid_rs = self.valid_step()
+                    self.logger.report_metric({
+                        "train_loss": train_loss.calc(),
+                        **valid_rs,
+                        "pred_text": pred_text,
+                        "target_text": target_text
+                    })
+                    if valid_rs['valid_acc'] > self.best:
+                        self.best = valid_rs['valid_acc']
+                        self.save()
+                else:
+                    self.logger.report_metric({
+                        "train_loss": train_loss.calc(),
+                        "pred_text": pred_text,
+                        "target_text": target_text
+                    })
+                    if self.step > 0:
+                        self.save()
                 self.logger.report_delimiter()
                 train_loss.clear()
-                if valid_rs['valid_acc'] > self.best:
-                    self.best = valid_rs['valid_acc']
-                    self.save()
             self.step += 1
 
     def valid_step(self):
