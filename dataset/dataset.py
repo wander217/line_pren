@@ -71,6 +71,6 @@ class PRENDataset(Dataset):
         label_code: str = 'label{}'.format(index)
         byte_label: bytes = self._txn.get(label_code.encode())
         label = byte_label.decode("utf-8")
-        label = label.strip("\n").strip("\r\t")
+        label = label.strip("\n").strip("\r\t").strip()
         label = self.alphabet.encode(label)
         return img, label
