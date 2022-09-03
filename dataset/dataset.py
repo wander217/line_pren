@@ -60,7 +60,7 @@ class PRENDataset(Dataset):
     def __getitem__(self, index: int) -> Tuple:
         # txn_id, rid = self.index[index]
         # txn = self.txn[txn_id]['txn']
-
+        index = index + 1
         img_code: str = 'image-%09d' % index
         img_buf = self._txn.get(img_code.encode())
         img = np.frombuffer(img_buf, dtype=np.uint8)
