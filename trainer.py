@@ -25,7 +25,6 @@ class PRENTrainer:
                  start_epoch: int,
                  train: Dict,
                  valid: Dict,
-                 test: Dict,
                  checkpoint: Dict,
                  logger: Dict):
         self.device = torch.device('cpu')
@@ -44,7 +43,6 @@ class PRENTrainer:
         self.optimizer: optim.Optimizer = cls(self.model.parameters(), **optimizer['params'])
         self.train_loader = PRENLoader(**train, alphabet=self.alphabet).build()
         self.valid_loader = PRENLoader(**valid, alphabet=self.alphabet).build()
-        # self.test_loader = PRENLoader(**test, alphabet=self.alphabet).build()
 
         self.logger: PRENLogger = PRENLogger(**logger)
         self.checkpoint: PRENCheckpoint = PRENCheckpoint(**checkpoint)
@@ -90,13 +88,11 @@ class PRENTrainer:
                 target_text = self.alphabet.decode(target_text)
                 self.logger.report_time("Epoch {} - step {}".format(epoch, self.step))
                 valid_rs = self.valid_step()
-                # test_result = self.test_step()
                 self.logger.report_metric({
                     "train_loss": train_loss.calc(),
                     **valid_rs,
                     "pred_text": pred_text,
-                    "target_text": target_text,
-                    # **test_result
+                    "target_text": target_text
                 })
                 self.logger.report_delimiter()
                 train_loss.clear()
@@ -126,24 +122,6 @@ class PRENTrainer:
             "valid_acc": valid_acc.calc(),
             "valid_norm": valid_norm.calc()
         }
-
-    # def test_step(self):
-    #     self.model.eval()
-    #     test_acc: Averager = Averager()
-    #     test_norm: Averager = Averager()
-    #     with torch.no_grad():
-    #         for _, (image, target) in enumerate(self.test_loader):
-    #             bs = image.size(0)
-    #             image = image.to(self.device)
-    #             target = target.to(self.device)
-    #             pred: Tensor = self.model(image)
-    #             acc, norm = self._acc(pred, target)
-    #             test_acc.update(acc, bs)
-    #             test_norm.update(norm, bs)
-    #     return {
-    #         "test_acc": test_acc.calc(),
-    #         "test_norm": test_norm.calc()
-    #     }
 
     def _acc(self, pred: Tensor, target: Tensor) -> Tuple:
         n_correct: int = 0

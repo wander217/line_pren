@@ -3,8 +3,6 @@ from typing import Tuple, List
 import cv2 as cv
 import lmdb
 import numpy as np
-from os import listdir
-from os.path import join
 from dataset.alphabet import Alphabet
 
 
