@@ -38,6 +38,9 @@ optimizer:
     betas: [0.9, 0.98]
     eps: !!float 1e-09
 
+criterion:
+  gamma: 2
+
 checkpoint:
   workspace: './'
   resume: ''
