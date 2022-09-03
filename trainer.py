@@ -87,7 +87,7 @@ class PRENTrainer:
                 target_text = target[0].detach().cpu().numpy()
                 target_text = self.alphabet.decode(target_text)
                 self.logger.report_time("Epoch {} - step {}".format(epoch, self.step))
-                if self.step > 0 and self.step % (self.save_interval * 10) == 0:
+                if self.step > 0 and self.step % (self.save_interval * 5) == 0:
                     valid_rs = self.valid_step()
                     self.logger.report_metric({
                         "train_loss": train_loss.calc(),
