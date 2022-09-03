@@ -102,8 +102,6 @@ class PRENTrainer:
                         "pred_text": pred_text,
                         "target_text": target_text
                     })
-                    if self.step > 0:
-                        self.save()
                 self.logger.report_delimiter()
                 train_loss.clear()
             self.step += 1
