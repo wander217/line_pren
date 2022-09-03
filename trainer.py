@@ -147,7 +147,7 @@ class PRENTrainer:
             norm_edit += Levenshtein.distance(p_str, t_str) / max_len
             if p_str == t_str:
                 n_correct += 1
-        return n_correct, norm_edit
+        return n_correct, 1 - norm_edit
 
     def load(self):
         state_dict: Dict = self.checkpoint.load()
