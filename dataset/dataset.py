@@ -61,14 +61,14 @@ class PRENDataset(Dataset):
         # txn_id, rid = self.index[index]
         # txn = self.txn[txn_id]['txn']
         index = index + 1
-        img_code: str = 'image-%09d' % index
+        img_code: str = 'img%09d' % index
         img_buf = self._txn.get(img_code.encode())
         img = np.frombuffer(img_buf, dtype=np.uint8)
         img = cv.imdecode(img, cv.IMREAD_COLOR)
         # img = cv.resize(img, (900, 32), interpolation=cv.INTER_CUBIC)
         img = normalize(img)
 
-        label_code: str = 'label-%09d' % index
+        label_code: str = 'label%09d' % index
         byte_label: bytes = self._txn.get(label_code.encode())
         label = byte_label.decode("utf-8")
         label = label.strip("\n").strip("\r\t")
