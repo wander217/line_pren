@@ -1,0 +1,59 @@
+total_epoch: 100
+start_epoch: 1
+
+alphabet:
+  path: 'data/rec/config/alphabet.txt'
+  max_len: 125
+
+model:
+  encoder:
+    name: "eb0"
+  decoder:
+    out_channel: 5
+    out_size: 384
+    drop_out: 0.1
+
+train:
+  batch_size: 32
+  num_workers: 8
+  drop_last: True
+  shuffle: True
+  pin_memory: False
+  dataset:
+    path: '../input/long-text'
+
+valid:
+  batch_size: 32
+  num_workers: 8
+  drop_last: True
+  shuffle: False
+  pin_memory: False
+  dataset:
+    path: '../input/long-text'
+
+test:
+  batch_size: 32
+  num_workers: 8
+  drop_last: True
+  shuffle: False
+  pin_memory: False
+  dataset:
+    path: '../input/long-text'
+
+optimizer:
+  name: 'Adam'
+  params:
+    lr: 0.001
+    betas: [0.9, 0.98]
+    eps: !!float 1e-09
+
+Criterion:
+  gamma: 2
+
+checkpoint:
+  workspace: './'
+  resume: ''
+
+logger:
+  workspace: './'
+  level: 'INFO'
