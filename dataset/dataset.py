@@ -41,6 +41,7 @@ class PRENDataset(Dataset):
                         readahead=False,
                         meminit=False)
         self._txn = env.begin(write=False)
+        self.nSample = int(self._txn.get('num-samples'.encode()))
         # nSample: int = int(txn.get('num-samples'.encode()))
         # self.txn.append({
         #     "txn": txn,
