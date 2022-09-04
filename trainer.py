@@ -161,6 +161,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", '--data', default='', type=str, help="path of data")
     parser.add_argument("-s", '--save_interval', default=1000, type=int, help="number of step to save")
     parser.add_argument("-r", '--resume', default='', type=str, help="resume path")
+    parser.add_argument("-p", '--primitive_num', default=5, type=int, help="number of primitive")
     args = parser.parse_args()
     with open(args.config) as f:
         config = yaml.safe_load(f)
@@ -171,5 +172,6 @@ if __name__ == "__main__":
             config[item]['dataset']['path'] = os.path.join(args.data.strip(), item)
     if args.resume.strip():
         config['checkpoint']['resume'] = args.resume.strip()
+    config['model']['decoder']['out_channel'] = args.primitive_num
     trainer = PRENTrainer(**config, save_interval=args.save_interval)
     trainer.train()
