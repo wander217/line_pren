@@ -9,7 +9,7 @@ model:
   encoder:
     name: "eb0"
   decoder:
-    out_channel: 3
+    out_channel: 15
     out_size: 384
     drop_out: 0.1
 
