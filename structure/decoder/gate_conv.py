@@ -29,6 +29,5 @@ class GateConv(nn.Module):
             :param x: (B, in_chanel, in_size)
             :return: (B, out_chanel, out_size)
         """
-        output: Tensor = self.conv(x)
-        output = self.fc(output)
+        output: Tensor = self.conv(self.fc(x))
         return output

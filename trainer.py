@@ -1,5 +1,6 @@
 import argparse
 import os
+import random
 import warnings
 import numpy as np
 import torch
@@ -111,8 +112,11 @@ class PRENTrainer:
         valid_loss: Averager = Averager()
         valid_acc: Averager = Averager()
         valid_norm: Averager = Averager()
+        selected_index = random.randint(0, self.valid_loader.__len__() - 1)
+        pred_text = ''
+        target_text = ''
         with torch.no_grad():
-            for _, (image, target) in enumerate(self.valid_loader):
+            for idx, (image, target) in enumerate(self.valid_loader):
                 bs = image.size(0)
                 image = image.to(self.device)
                 target = target.to(self.device)
@@ -120,12 +124,19 @@ class PRENTrainer:
                 loss: Tensor = self.criterion(pred, target)
                 valid_loss.update(loss.item() * bs, bs)
                 acc, norm = self._acc(pred, target)
+                if idx == selected_index:
+                    pred_text = torch.log_softmax(pred[0], dim=-1).detach().argmax(1).cpu().numpy()
+                    pred_text = self.alphabet.decode(pred_text)
+                    target_text = target[0].detach().cpu().numpy()
+                    target_text = self.alphabet.decode(target_text)
                 valid_acc.update(acc, bs)
                 valid_norm.update(norm, bs)
         return {
             "valid_loss": valid_loss.calc(),
             "valid_acc": valid_acc.calc(),
-            "valid_norm": 1 - valid_norm.calc()
+            "valid_norm": 1 - valid_norm.calc(),
+            "pred_text": pred_text,
+            "target_text": target_text
         }
 
     def _acc(self, pred: Tensor, target: Tensor) -> Tuple:

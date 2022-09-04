@@ -21,7 +21,7 @@ class PREN(nn.Module):
 
     def forward(self, image: Tensor) -> Tensor:
         """
-            :param image: (B, 3, 32, 960)
+            :param image: (B, 3, 32, 1024)
             :return: pred :  (B, max_len, d_output)
         """
         pred: Tensor = self._decoder(self._encoder(image))
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     total_params = sum(p.numel() for p in model.parameters())
     train_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(total_params, train_params)
-    x = torch.randn((1, 3, 32, 960))
+    x = torch.randn((1, 3, 32, 1024))
     start = time.time()
     y = model(x)
     print(time.time() - start)

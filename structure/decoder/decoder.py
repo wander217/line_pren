@@ -21,14 +21,14 @@ class PRENDecoder(nn.Module):
             PoolAgg(out_channel, in_sizes[i], in_sizes[i], out_size // 3)
             for i in range(len(in_sizes))
         ])
-        self._p_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, out_size, drop_out)
+        self._p_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, alphabet.size(), drop_out)
 
         self._wgg: nn.ModuleList = nn.ModuleList([
             WeightAgg(out_channel, in_sizes[i], in_sizes[i], out_size // 3)
             for i in range(len(in_sizes))
         ])
-        self._w_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, out_size, drop_out)
-        self._fc: nn.Module = nn.Linear(out_size, alphabet.size(), bias=False)
+        self._w_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, alphabet.size(), drop_out)
+        self._fc: nn.Module = nn.Linear(alphabet.size() * 2, alphabet.size())
         self._fc.apply(weight_init)
 
     def forward(self, features: List):
@@ -36,6 +36,6 @@ class PRENDecoder(nn.Module):
         p_gate: Tensor = self._p_gate(torch.cat(pgg, dim=2))
         wgg: List = [self._wgg[i](features[i]) for i in range(len(features))]
         w_gate: Tensor = self._w_gate(torch.cat(wgg, dim=2))
-        score: Tensor = (p_gate + w_gate) / 2
+        score: Tensor = torch.cat([p_gate, w_gate], dim=-1)
         pred: Tensor = self._fc(score)
         return pred
