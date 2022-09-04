@@ -32,12 +32,12 @@ if __name__ == "__main__":
     config_path = r'F:\project\python\pren\asset\pc_eb0.yaml'
     with open(config_path) as f:
         config = yaml.safe_load(f)
-    alphabet = Alphabet(r'F:\project\python\pren\asset\alphabet.txt', 100)
+    alphabet = Alphabet(r'F:\project\python\pren\asset\alphabet.txt', 105)
     model = PREN(**config['model'], alphabet=alphabet)
     total_params = sum(p.numel() for p in model.parameters())
     train_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(total_params, train_params)
-    x = torch.randn((1, 3, 32, 900))
+    x = torch.randn((1, 3, 32, 960))
     start = time.time()
     y = model(x)
     print(time.time() - start)

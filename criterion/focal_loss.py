@@ -6,7 +6,7 @@ import torch.nn.functional as F
 class FocalLoss(nn.Module):
     def __init__(self, pad: int, gamma: int):
         super().__init__()
-        self._criterion: nn.Module = nn.CrossEntropyLoss(ignore_index=pad)
+        self._criterion: nn.Module = nn.CrossEntropyLoss(ignore_index=pad, reduction='none')
         self._gamma: int = gamma
         self._pad: int = pad
 

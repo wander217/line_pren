@@ -3,13 +3,13 @@ start_epoch: 1
 
 alphabet:
   path: 'data/rec/config/alphabet.txt'
-  max_len: 101
+  max_len: 105
 
 model:
   encoder:
     name: "eb0"
   decoder:
-    out_channel: 5
+    out_channel: 15
     out_size: 384
     drop_out: 0.1
 
