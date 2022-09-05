@@ -21,7 +21,7 @@ class PRENDecoder(nn.Module):
             PoolAgg(out_channel, in_sizes[i], in_sizes[i], out_size // 3)
             for i in range(len(in_sizes))
         ])
-        self._p_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, alphabet.size(), drop_out)
+        self._p_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, out_size, drop_out)
 
         self._wgg: nn.ModuleList = nn.ModuleList([
             WeightAgg(out_channel, in_sizes[i], in_sizes[i], out_size // 3)
