@@ -27,8 +27,8 @@ class PRENDecoder(nn.Module):
             WeightAgg(out_channel, in_sizes[i], in_sizes[i], out_size // 3)
             for i in range(len(in_sizes))
         ])
-        self._w_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, out_size, drop_out)
-        self._fc: nn.Module = nn.Linear(out_size, alphabet.size(), bias=False)
+        self._w_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, alphabet.size(), drop_out)
+        self._fc: nn.Module = nn.Linear(alphabet.size(), alphabet.size(), bias=False)
         self._fc.apply(weight_init)
 
     def forward(self, features: List):
