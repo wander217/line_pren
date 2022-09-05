@@ -28,7 +28,7 @@ class PRENDecoder(nn.Module):
             for i in range(len(in_sizes))
         ])
         self._w_gate: nn.Module = GateConv(out_channel, alphabet.max_len, out_size, out_size, drop_out)
-        self._fc: nn.Module = nn.Linear(out_size, alphabet.size())
+        self._fc: nn.Module = nn.Linear(out_size, alphabet.size(), bias=False)
         self._fc.apply(weight_init)
 
     def forward(self, features: List):
