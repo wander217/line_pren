@@ -36,6 +36,6 @@ class PRENDecoder(nn.Module):
         p_gate: Tensor = self._p_gate(torch.cat(pgg, dim=2))
         wgg: List = [self._wgg[i](features[i]) for i in range(len(features))]
         w_gate: Tensor = self._w_gate(torch.cat(wgg, dim=2))
-        score: Tensor = torch.cat([p_gate, w_gate], dim=-1)
+        score: Tensor = (p_gate + w_gate) / 2
         pred: Tensor = self._fc(score)
         return pred
