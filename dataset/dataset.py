@@ -3,7 +3,6 @@ import os
 
 from torch.utils.data import Dataset
 from typing import Tuple, List
-from PIL import Image
 import cv2 as cv
 import lmdb
 import numpy as np
@@ -81,12 +80,8 @@ class PRENDataset(Dataset):
         # label = byte_label.decode("utf-8")
         # label = label.strip("\n").strip("\r\t").strip()
         # label = self.alphabet.encode(label)
-        img = Image.open(os.path.join(
-            self.image_path,
-            self.target[index]['file_name']
-        ))
-        img = np.array(img)[:, :, ::-1]
-        label = self.alphabet.encode(
-            self.target[index]['text']
-        )
+        img = cv.imread(os.path.join(self.image_path, self.target[index]['file_name']))
+        new_img = np.zeros((50, 160, 3))
+        new_img[:50, :130, :] = img
+        label = self.alphabet.encode(self.target[index]['text'])
         return img, label
