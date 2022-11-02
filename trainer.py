@@ -88,7 +88,6 @@ class PRENTrainer:
             loss.backward()
             self.optimizer.step()
             train_loss.update(loss.item() * bs, bs)
-            self.logger.report_delimiter()
         return train_loss.calc()
 
     def valid_step(self):
