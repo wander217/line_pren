@@ -3,33 +3,35 @@ start_epoch: 1
 
 alphabet:
   path: 'data/rec/config/alphabet.txt'
-  max_len: 105
+  max_len: 6
 
 model:
   encoder:
     name: "eb0"
   decoder:
-    out_channel: 15
+    out_channel: 3
     out_size: 384
     drop_out: 0.1
 
 train:
-  batch_size: 32
+  batch_size: 8
   num_workers: 8
   drop_last: True
   shuffle: True
   pin_memory: False
   dataset:
-    path: '../input/long-text'
+    image_path: ''
+    target_path: ''
 
 valid:
-  batch_size: 32
+  batch_size: 8
   num_workers: 8
   drop_last: True
   shuffle: False
   pin_memory: False
   dataset:
-    path: '../input/long-text'
+    image_path: ''
+    target_path: ''
 
 optimizer:
   name: 'Adam'

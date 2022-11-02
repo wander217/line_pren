@@ -1,3 +1,5 @@
+import json
+
 from torch.utils.data import Dataset
 from typing import Tuple, List
 import cv2 as cv
@@ -26,20 +28,25 @@ def resize(image: np.ndarray, max_size: List, value: int):
 
 
 class PRENDataset(Dataset):
-    def __init__(self, path: str, alphabet: Alphabet) -> None:
+    def __init__(self,
+                 image_path: str,
+                 target_path: str,
+                 alphabet: Alphabet) -> None:
         super().__init__()
-        self.txn: List = []
-        self.nSample: int = 0
+        # self.txn: List = []
+        # self.nSample: int = 0
         self.alphabet = alphabet
+        self.target = json.loads(open(target_path, 'r', encoding='utf-8').read())
+        self.image_path = image_path
         # for file in listdir(path):
-        env = lmdb.open(path,
-                        max_readers=8,
-                        readonly=True,
-                        lock=False,
-                        readahead=False,
-                        meminit=False)
-        self._txn = env.begin(write=False)
-        self.nSample = int(self._txn.get('num-samples'.encode()))
+        # env = lmdb.open(path,
+        #                 max_readers=8,
+        #                 readonly=True,
+        #                 lock=False,
+        #                 readahead=False,
+        #                 meminit=False)
+        # self._txn = env.begin(write=False)
+        # self.nSample = int(self._txn.get('num-samples'.encode()))
         # nSample: int = int(txn.get('num-samples'.encode()))
         # self.txn.append({
         #     "txn": txn,
@@ -55,22 +62,24 @@ class PRENDataset(Dataset):
         #     start += nSample
 
     def __len__(self):
-        return self.nSample
+        return len(self.target)
 
     def __getitem__(self, index: int) -> Tuple:
         # txn_id, rid = self.index[index]
         # txn = self.txn[txn_id]['txn']
-        index = index + 1
-        img_code: str = 'img{}'.format(index)
-        img_buf = self._txn.get(img_code.encode())
-        img = np.frombuffer(img_buf, dtype=np.uint8)
-        img = cv.imdecode(img, cv.IMREAD_COLOR)
-        # img = cv.resize(img, (900, 32), interpolation=cv.INTER_CUBIC)
-        img = normalize(img)
-
-        label_code: str = 'label{}'.format(index)
-        byte_label: bytes = self._txn.get(label_code.encode())
-        label = byte_label.decode("utf-8")
-        label = label.strip("\n").strip("\r\t").strip()
-        label = self.alphabet.encode(label)
+        # index = index + 1
+        # img_code: str = 'img{}'.format(index)
+        # img_buf = self._txn.get(img_code.encode())
+        # img = np.frombuffer(img_buf, dtype=np.uint8)
+        # img = cv.imdecode(img, cv.IMREAD_COLOR)
+        # # img = cv.resize(img, (900, 32), interpolation=cv.INTER_CUBIC)
+        # img = normalize(img)
+        #
+        # label_code: str = 'label{}'.format(index)
+        # byte_label: bytes = self._txn.get(label_code.encode())
+        # label = byte_label.decode("utf-8")
+        # label = label.strip("\n").strip("\r\t").strip()
+        # label = self.alphabet.encode(label)
+        img = cv.imread(self.target[index]['filename'])
+        label = self.target[index]['text']
         return img, label

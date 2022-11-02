@@ -172,8 +172,8 @@ if __name__ == "__main__":
     parser.add_argument("-d", '--data', default='', type=str, help="path of data")
     parser.add_argument("-s", '--save_interval', default=1000, type=int, help="number of step to save")
     parser.add_argument("-r", '--resume', default='', type=str, help="resume path")
-    parser.add_argument("-p", '--primitive_num', default=5, type=int, help="number of primitive")
-    parser.add_argument("-m", '--max_len', default=105, type=int, help="max length of sequence")
+    parser.add_argument("-p", '--primitive_num', default=3, type=int, help="number of primitive")
+    parser.add_argument("-m", '--max_len', default=6, type=int, help="max length of sequence")
     args = parser.parse_args()
     with open(args.config) as f:
         config = yaml.safe_load(f)
