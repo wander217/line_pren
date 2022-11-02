@@ -1,4 +1,5 @@
 import json
+import os
 
 from torch.utils.data import Dataset
 from typing import Tuple, List
@@ -29,15 +30,14 @@ def resize(image: np.ndarray, max_size: List, value: int):
 
 class PRENDataset(Dataset):
     def __init__(self,
-                 image_path: str,
-                 target_path: str,
+                 path: str,
                  alphabet: Alphabet) -> None:
         super().__init__()
         # self.txn: List = []
         # self.nSample: int = 0
         self.alphabet = alphabet
-        self.target = json.loads(open(target_path, 'r', encoding='utf-8').read())
-        self.image_path = image_path
+        self.target = json.loads(open(os.path.join(path, "target.json"), 'r', encoding='utf-8').read())
+        self.image_path = os.path.join(path, "image/")
         # for file in listdir(path):
         # env = lmdb.open(path,
         #                 max_readers=8,
@@ -80,6 +80,6 @@ class PRENDataset(Dataset):
         # label = byte_label.decode("utf-8")
         # label = label.strip("\n").strip("\r\t").strip()
         # label = self.alphabet.encode(label)
-        img = cv.imread(self.target[index]['filename'])
+        img = cv.imread(self.target[index]['file_name'])
         label = self.target[index]['text']
         return img, label
