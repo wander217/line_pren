@@ -15,7 +15,7 @@ model:
 
 train:
   batch_size: 8
-  num_workers: 0
+  num_workers: 2
   drop_last: True
   shuffle: True
   pin_memory: False
@@ -24,7 +24,7 @@ train:
 
 valid:
   batch_size: 8
-  num_workers: 0
+  num_workers: 2
   drop_last: True
   shuffle: False
   pin_memory: False

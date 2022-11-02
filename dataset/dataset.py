@@ -1,10 +1,8 @@
 import json
 import os
-
 from torch.utils.data import Dataset
 from typing import Tuple, List
 import cv2 as cv
-import lmdb
 import numpy as np
 from dataset.alphabet import Alphabet
 

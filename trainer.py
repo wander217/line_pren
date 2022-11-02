@@ -56,19 +56,26 @@ class PRENTrainer:
         self.logger.report_time("Starting:")
         self.logger.report_delimiter()
         for epoch in range(self.start_epoch, self.total_epoch + 1):
-            self.train_step(epoch)
+            train_rs = self.train_step()
+            valid_rs = self.valid_step()
+            self.logger.report_delimiter()
+            self.logger.report_metric({
+                "train_loss": train_rs,
+                **valid_rs
+            })
+            self.save(epoch)
         self.logger.report_delimiter()
         self.logger.report_time("Finish:")
         self.logger.report_delimiter()
 
-    def save(self):
+    def save(self, epoch:int):
         self.logger.report_delimiter()
         self.logger.report_time("Saving:")
-        self.checkpoint.save(self.model, self.optimizer, self.step)
+        self.checkpoint.save(self.model, self.optimizer, epoch)
         self.logger.report_time("Saving complete!")
         self.logger.report_delimiter()
 
-    def train_step(self, epoch: int):
+    def train_step(self):
         train_loss: Averager = Averager()
         for batch, (image, target) in enumerate(self.train_loader):
             self.model.train()
@@ -81,31 +88,8 @@ class PRENTrainer:
             loss.backward()
             self.optimizer.step()
             train_loss.update(loss.item() * bs, bs)
-            if self.step % self.save_interval == 0:
-                self.logger.report_delimiter()
-                pred_text = torch.log_softmax(pred[0], dim=-1).detach().argmax(1).cpu().numpy()
-                pred_text = self.alphabet.decode(pred_text)
-                target_text = target[0].detach().cpu().numpy()
-                target_text = self.alphabet.decode(target_text)
-                self.logger.report_time("Epoch {} - step {}".format(epoch, self.step))
-                if self.step > 0 and self.step % (self.save_interval * 5) == 0:
-                    valid_rs = self.valid_step()
-                    self.logger.report_metric({
-                        "train_loss": train_loss.calc(),
-                        **valid_rs
-                    })
-                    if valid_rs['valid_acc'] > self.best:
-                        self.best = valid_rs['valid_acc']
-                        self.save()
-                else:
-                    self.logger.report_metric({
-                        "train_loss": train_loss.calc(),
-                        "pred_text": pred_text,
-                        "target_text": target_text
-                    })
-                self.logger.report_delimiter()
-                train_loss.clear()
-            self.step += 1
+            self.logger.report_delimiter()
+        return train_loss.calc()
 
     def valid_step(self):
         self.model.eval()
