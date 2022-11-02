@@ -56,6 +56,8 @@ class PRENTrainer:
         self.logger.report_time("Starting:")
         self.logger.report_delimiter()
         for epoch in range(self.start_epoch, self.total_epoch + 1):
+            self.logger.report_delimiter()
+            self.logger.report_time("Epoch {}".format(epoch))
             train_rs = self.train_step()
             valid_rs = self.valid_step()
             self.logger.report_delimiter()
