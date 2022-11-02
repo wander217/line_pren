@@ -32,14 +32,14 @@ if __name__ == "__main__":
     config_path = r'F:\project\python\pren\asset\pc_eb0.yaml'
     with open(config_path) as f:
         config = yaml.safe_load(f)
-    alphabet = Alphabet(r'F:\project\python\pren\asset\alphabet.txt', 105)
+    alphabet = Alphabet(r'F:\project\python\pren\asset\alphabet.txt', 6)
     model = PREN(**config['model'], alphabet=alphabet).to(torch.device('cuda'))
     total_params = sum(p.numel() for p in model.parameters())
     train_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(total_params, train_params)
-    x = torch.randn((8, 3, 32, 1024)).to(torch.device('cuda'))
-    while True:
-        start = time.time()
-        y = model(x)
-        print(time.time() - start)
+    # x = torch.randn((8, 3, 32, 1024)).to(torch.device('cuda'))
+    # while True:
+    #     start = time.time()
+    #     y = model(x)
+    #     print(time.time() - start)
         # print(y.size())
