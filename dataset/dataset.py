@@ -80,6 +80,11 @@ class PRENDataset(Dataset):
         # label = byte_label.decode("utf-8")
         # label = label.strip("\n").strip("\r\t").strip()
         # label = self.alphabet.encode(label)
-        img = cv.imread(self.target[index]['file_name'])
-        label = self.target[index]['text']
+        img = cv.imread(os.path.join(
+            self.image_path,
+            self.target[index]['file_name']
+        ))
+        label = self.alphabet.encode(
+            self.target[index]['text']
+        )
         return img, label
