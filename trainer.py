@@ -180,7 +180,7 @@ if __name__ == "__main__":
     if args.alphabet.strip():
         config['alphabet']['path'] = args.alphabet.strip()
     if args.data.strip():
-        for item in ["train", "valid"]:
+        for item in ["train", "valid", "test"]:
             config[item]['dataset']['path'] = os.path.join(args.data.strip(), item)
     if args.resume.strip():
         config['checkpoint']['resume'] = args.resume.strip()
