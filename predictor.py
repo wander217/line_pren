@@ -18,6 +18,7 @@ class PRENPredictor:
         data['alphabet']['path'] = alphabet
         self.alphabet: Alphabet = Alphabet(**data['alphabet'])
         self.model: nn.Module = PREN(self.alphabet, **data['model'])
+        self.model = self.model.to(self.device)
         # print(sum(p.numel() for p in self.model.parameters() if p.requires_grad))
         state_dict = torch.load(pretrained, map_location=self.device)
         self.model.load_state_dict(state_dict['model'])
@@ -35,10 +36,10 @@ class PRENPredictor:
 
 
 if __name__ == "__main__":
-    config = r'D:\python_project\pren\asset\pc_eb0.yaml'
-    pretrained = r'D:\python_project\pren\pretrained\checkpoint56000.pth'
-    alphabet = r'D:\python_project\pren\asset\viet_alphabet.txt'
+    config = r'./asset/pc_eb0.yaml'
+    pretrained = r'./pretrained/checkpoint996.pth'
+    alphabet = r'./asset/alphabet.txt'
     predictor = PRENPredictor(config=config, pretrained=pretrained, alphabet=alphabet)
-    image = cv2.imread(r'D:\python_project\pren\tool\abc.png')
+    image = cv2.imread(r'./pretrained/captcha.png')
     ans = predictor.predict(image)
     print(ans)

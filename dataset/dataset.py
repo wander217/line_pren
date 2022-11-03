@@ -81,5 +81,6 @@ class PRENDataset(Dataset):
         img = cv.imread(os.path.join(self.image_path, self.target[index]['file_name']))
         new_img = np.zeros((50, 160, 3))
         new_img[:50, :130, :] = img
+        new_img = normalize(new_img)
         label = self.alphabet.encode(self.target[index]['text'])
-        return img, label
+        return new_img, label
